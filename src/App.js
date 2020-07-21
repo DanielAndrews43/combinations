@@ -1,25 +1,61 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import styled from "styled-components";
+
+import Column from "./Column";
+import AddColumn from "./AddColumn";
+import Results from "./Results";
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 function App() {
+  const [columns, setColumns] = useState([]);
+
+  const addColumn = () => {
+    setColumns([...columns, []]);
+  };
+
+  const removeColumn = index => {
+    const firstHalf = columns.slice(0, index);
+    const secondHalf = columns.slice(index + 1);
+    setColumns([...firstHalf, ...secondHalf]);
+  };
+
+  const addItem = (colIndex, val) => {
+    const column = columns[colIndex];
+    const newColumn = [...column, val];
+
+    const firstHalf = columns.slice(0, colIndex);
+    const secondHalf = columns.slice(colIndex + 1);
+    setColumns([...firstHalf, newColumn, ...secondHalf]);
+  };
+
+  const removeItem = (colIndex, itemIndex) => {
+    const column = columns[colIndex];
+    const newColumn = column.slice(0, itemIndex).concat(column.slice(itemIndex + 1));
+
+    const firstHalf = columns.slice(0, colIndex);
+    const secondHalf = columns.slice(colIndex + 1);
+    setColumns([...firstHalf, newColumn, ...secondHalf]);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      {columns.map((c, i) => (
+        <Column
+          key={i}
+          number={i}
+          vals={c}
+          addItem={val => addItem(i, val)}
+          removeItem={itemIndex => removeItem(i, itemIndex)}
+          removeColumn={() => removeColumn(i)}
+        />
+      ))}
+      <AddColumn onClick={addColumn} />
+      <Results columns={columns} />
+    </Container>
   );
 }
 
