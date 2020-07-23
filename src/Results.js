@@ -15,6 +15,7 @@ const Result = styled.div`
   border-radius: 20px;
   padding: 5px 10px;
   margin-right: 7px;
+  margin-bottom: 2px;
 `;
 
 function Results({ columns }) {
